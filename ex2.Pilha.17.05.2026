@@ -1,0 +1,44 @@
+﻿using System;
+class Program
+{
+    static void Main()
+    {
+        Stack<int> original = new Stack<int>();
+        Stack<int> auxiliar = new Stack<int>();
+
+        // Entrada de dados 
+        Console.WriteLine("Digite números inteiros para a pilha (digite 'fim' para encerrar):");
+        while (true)
+        {
+            string entrada = Console.ReadLine();
+            if (entrada.ToLower() == "fim") break;
+
+            if (int.TryParse(entrada, out int numero))
+            {
+                original.Push(numero);
+            }
+            else
+            {
+                Console.WriteLine("Valor inválido, digite um número ou 'fim'.");
+            }
+        }
+
+        while (original.Count > 0)
+        {
+            int temp = original.Pop();
+
+            while (auxiliar.Count > 0 && auxiliar.Peek() < temp)
+            {
+                original.Push(auxiliar.Pop());
+            }
+
+            auxiliar.Push(temp);
+        }
+
+        Console.WriteLine("\nPilha ordenada (menor valor no topo):");
+        foreach (var item in auxiliar)
+        {
+            Console.WriteLine(item);
+        }
+    }
+}
