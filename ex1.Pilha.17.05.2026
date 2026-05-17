@@ -1,0 +1,72 @@
+﻿using System;
+using System.Security.AccessControl;
+
+class Navegador
+{
+    private Stack<string> historico = new Stack<string>();
+    private Stack<string> avancar = new Stack<string>();
+
+    public void Visitar(string url)
+    {
+        historico.Push(url);
+        avancar.Clear(); // limpa a pilha de avançar ao visitar uma nova página
+        Console.WriteLine($"Visitando: {url}");
+    }
+
+    public void Voltar()
+    {
+        if (historico.Count > 1)
+        {
+            string urlAtual = historico.Pop(); // remove a URL atual
+            avancar.Push(urlAtual); // adiciona a URL atual à pilha de avançar
+            Console.WriteLine($"Voltando para: {historico.Peek()}");
+        }
+
+        else
+        {
+            Console.WriteLine("Não há páginas para voltar.");
+        }
+    }
+
+    public void Avancar()
+    {
+        if(avancar.Count > 0)
+            Console.WriteLine($"Página atual: {historico.Peek()}");
+        else
+            Console.WriteLine("Nenhuma página aberta.");
+    }
+
+    public void ExibirAtual()
+    {
+        if (historico.Count > 0)
+        {
+            Console.WriteLine($"Página atual: {historico.Peek()}");
+        }
+        else
+        {
+            Console.WriteLine("Nenhuma página aberta.");
+        }
+    }
+
+}
+
+
+
+class Program
+{
+       static void Main(string[] args)
+    {
+        Navegador navegador = new Navegador();
+        navegador.Visitar("google.com");
+        navegador.Visitar("youtube.com");
+        navegador.Visitar("github.com");
+
+        navegador.ExibirAtual();
+        navegador.Voltar();
+        navegador.Voltar();
+        navegador.Avancar();
+        navegador.ExibirAtual();
+
+    }
+}
+
