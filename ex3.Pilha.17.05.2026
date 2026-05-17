@@ -1,0 +1,72 @@
+﻿using System;
+class Calculadora
+{
+    private static int Precedencia(string op)
+    {
+        if (op == "*" || op == "/") return 2;
+        if (op == "+" || op == "-") return 1;
+        return 0;
+    }
+
+    private static int AplicarOperador(string op, int b, int a)
+    {
+        switch (op)
+        {
+            case "+": return a + b;
+            case "-": return a - b;
+            case "*": return a * b;
+            case "/": return a / b;
+            default: throw new ArgumentException("Operador inválido");
+        }
+    }
+
+    public static int AvaliarExpressao(string expressao)
+    {
+        Stack<int> operandos = new Stack<int>();
+        Stack<string> operadores = new Stack<string>();
+
+        string[] tokens = expressao.Split(' ');
+
+        foreach (string token in tokens)
+        {
+           
+            if (int.TryParse(token, out int numero))
+            {
+                operandos.Push(numero);
+            }
+            else 
+            {
+                while (operadores.Count > 0 && Precedencia(operadores.Peek()) >= Precedencia(token))
+                {
+                    string op = operadores.Pop();
+                    int b = operandos.Pop();
+                    int a = operandos.Pop();
+                    operandos.Push(AplicarOperador(op, b, a));
+                }
+                operadores.Push(token);
+            }
+        }
+
+        while (operadores.Count > 0)
+        {
+            string op = operadores.Pop();
+            int b = operandos.Pop();
+            int a = operandos.Pop();
+            operandos.Push(AplicarOperador(op, b, a));
+        }
+
+        return operandos.Pop();
+    }
+}
+
+class Program
+{
+    static void Main()
+    {
+        Console.WriteLine("Digite a expressão (tokens separados por espaço):");
+        string expressao = Console.ReadLine();
+
+        int resultado = Calculadora.AvaliarExpressao(expressao);
+        Console.WriteLine($"{expressao} = {resultado}");
+    }
+}
